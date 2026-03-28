@@ -1,0 +1,33 @@
+{% assign ss_api_url = api_url | default: '' %}
+{% assign ss_locale = locale | default: 'en' %}
+{% assign ss_currency = currency | default: shop.currency %}
+{% assign ss_theme = theme | default: 'dark' %}
+{% assign ss_max = max_results | default: 10 %}
+{% assign ss_placeholder = placeholder | default: '' %}
+{% assign ss_shop_url = shop.url | default: '' %}
+
+<shopify-semantic-search
+  api-url="{{ ss_api_url }}"
+  shop-url="{{ ss_shop_url }}"
+  locale="{{ ss_locale }}"
+  currency="{{ ss_currency }}"
+  theme="{{ ss_theme }}"
+  max-results="{{ ss_max }}"
+  {% if ss_placeholder != '' %}placeholder="{{ ss_placeholder }}"{% endif %}
+></shopify-semantic-search>
+
+{{ 'semantic-search.js' | asset_url | script_tag }}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var widget = document.querySelector('shopify-semantic-search');
+    if (!widget) return;
+
+    widget.addEventListener('add-to-cart', function(e) {
+      var handle = e.detail.handle;
+      if (handle) {
+        window.location.href = '/products/' + handle;
+      }
+    });
+  });
+</script>
